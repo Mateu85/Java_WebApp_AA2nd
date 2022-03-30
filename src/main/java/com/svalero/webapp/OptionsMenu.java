@@ -74,13 +74,13 @@ public class OptionsMenu {
     }
 
     public void findTask() {
-        System.out.print("Búsqueda por titulo: ");
+        System.out.print("Search by Title: ");
         String title = keyboard.nextLine();
 
         TaskDao taskDao = new TaskDao(connection);
         Task task = taskDao.findByTitle(title);
         if (task == null) {
-            System.out.println("Ese libro no existe");
+            System.out.println("No task Task was found by that name");
             return;
         }
 
@@ -90,12 +90,12 @@ public class OptionsMenu {
     }
 
     public void deleteTask() {
-        System.out.print("Titulo del libro a eliminar: ");
+        System.out.print("Type the Task you´d like to delete: ");
         String title = keyboard.nextLine();
         TaskDao taskDao = new TaskDao(connection);
         boolean deleted = TaskDao.remove(title);
         if (deleted)
-            System.out.println("El libro se ha borrado correctamente");
+            System.out.println("The task has been deleted successfully");
         else
             System.out.println("El libro no se ha podido borrar. No existe");
     }
