@@ -6,7 +6,6 @@ import com.svalero.webapp.domain.Task;
 
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class OptionsMenu {
@@ -15,7 +14,7 @@ public class OptionsMenu {
     private Database database;
     private Connection connection;
 
-    public void Menu() {
+    public  OptionsMenu() {
         keyboard = new Scanner(System.in);
     }
 
@@ -40,7 +39,7 @@ public class OptionsMenu {
             System.out.print("Type your Option: ");
             choice = keyboard.nextLine();
 
-            switch(choice) {
+            switch (choice) {
                 case "1":
                     addTask();
                     break;
@@ -89,6 +88,7 @@ public class OptionsMenu {
         System.out.println(task.getDescription());
         System.out.println(task.getLocation());
     }
+
     public void deleteTask() {
         System.out.print("Titulo del libro a eliminar: ");
         String title = keyboard.nextLine();
@@ -123,13 +123,15 @@ public class OptionsMenu {
     }
 
     public void showTaskList() {
-       TaskDao bookDao = new TaskDao(connection);
+        TaskDao bookDao = new TaskDao(connection);
         // TODO Propagar la excepción al menú de usuario
         ArrayList<Task> books = bookDao.findAll();
         for (Task book : books) {
             System.out.println(book.getTitle());
         }
     }
+
+}
 
 
 

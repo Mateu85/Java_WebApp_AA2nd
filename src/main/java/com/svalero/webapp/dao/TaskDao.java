@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class TaskDao {
 
-    private Connection connection;
+    private static Connection connection;
 
     public TaskDao(Connection connection) {
         this.connection = connection;
@@ -32,19 +32,6 @@ public class TaskDao {
     }
 
 
-    public void findone() {
-
-    }
-
-    public ArrayList<Task> findAll() {
-
-        return null;
-    }
-
-    public void modify() {
-
-    }
-
     public static boolean remove(String title) {
         String sql = "DELETE FROM books WHERE title = ?";
         try {
@@ -61,8 +48,42 @@ public class TaskDao {
         return false;
     }
 
-    public boolean modify(String title, Task newTask) {
+    public boolean modify(String title, Task book) {
+        String sql = "UPDATE books SET title = ?, author = ?, publisher = ? WHERE title = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, book.getTitle());
+            statement.setString(2, book.getDescription());
+            statement.setString(3, book.getLocation());
+            statement.setString(4, title);
+            int rows = statement.executeUpdate();
+            return rows == 1;
+        } catch (SQLException sqle) {
+            System.out.println("No se ha podido conectar con el servidor de base de datos. Comprueba que los datos son correctos y que el servidor se ha iniciado");
+            sqle.printStackTrace();
+        }
+
         return false;
+    }
+    public ArrayList<Task> findAll() {
+        String sql = "SELECT * FROM books ORDER BY title";
+        ArrayList<Task> books = new ArrayList<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Task book = new Task();
+                book.setTitle(resultSet.getString("title"));
+                book.setDescription(resultSet.getString("author"));
+                book.setLocation(resultSet.getString("publisher"));
+                books.add(book);
+            }
+        } catch (SQLException sqle) {
+            System.out.println("No se ha podido conectar con el servidor de base de datos. Comprueba que los datos son correctos y que el servidor se ha iniciado");
+            sqle.printStackTrace();
+        }
+
+        return books;
     }
 
     public Task findByTitle(String title) {
@@ -86,6 +107,7 @@ public class TaskDao {
 
         return task;
     }
+
 }
 
 

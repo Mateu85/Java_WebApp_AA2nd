@@ -12,6 +12,7 @@ public class Task {
         this.location = location;
     }
 
+    public Task() {}
 
 
     public String getTitle() {
