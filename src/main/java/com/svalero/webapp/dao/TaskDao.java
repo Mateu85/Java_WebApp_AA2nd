@@ -17,7 +17,7 @@ public class TaskDao {
     }
 
 
-    public void add(Task task) {
+    public void add(Task task)  {
         String sql = "INSERT INTO task (title, description, location) VALUES (?, ?, ?)";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);

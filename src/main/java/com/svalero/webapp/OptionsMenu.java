@@ -5,6 +5,7 @@ import com.svalero.webapp.dao.TaskDao;
 import com.svalero.webapp.domain.Task;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -69,8 +70,13 @@ public class OptionsMenu {
         Task task = new Task(title.trim(), Description.trim(), taskLocation.trim());
 
         TaskDao taskDao = new TaskDao(connection);
-        taskDao.add(task);
-        System.out.println("A new task has been added on the platform! Good Luck");
+
+        try {
+            taskDao.add(task);
+            System.out.println("A new task has been added on the platform! Good Luck");
+        } catch (SQLException sqle){
+            System.out.println("Something went wrong, try later");
+        }
     }
 
     public void findTask() {
