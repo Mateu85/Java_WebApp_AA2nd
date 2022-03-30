@@ -123,7 +123,11 @@ public class OptionsMenu {
     }
 
     public void showTaskList() {
-      //TODO CARGAR toda la lista de TASK
+       TaskDao bookDao = new TaskDao(connection);
+        // TODO Propagar la excepción al menú de usuario
+        ArrayList<Task> books = bookDao.findAll();
+        for (Task book : books) {
+            System.out.println(book.getTitle());
         }
     }
 

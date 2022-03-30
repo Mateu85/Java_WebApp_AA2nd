@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class TaskDao {
 
@@ -15,14 +16,6 @@ public class TaskDao {
         this.connection = connection;
     }
 
-    public static boolean remove(String title) {
-        return false;
-    }
-
-
-    public void TakDao(Connection connection) {
-        this.connection = connection;
-    }
 
     public void add(Task task) {
         String sql = "INSERT INTO books (title, author, publisher) VALUES (?, ?, ?)";
@@ -38,24 +31,34 @@ public class TaskDao {
         }
     }
 
-    public void showMenu() {
-
-    }
 
     public void findone() {
 
     }
 
-    public void findAll() {
+    public ArrayList<Task> findAll() {
 
+        return null;
     }
 
     public void modify() {
 
     }
 
-    public void remove() {
+    public static boolean remove(String title) {
+        String sql = "DELETE FROM books WHERE title = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, title);
+            int rows = statement.executeUpdate();
 
+            return rows == 1;
+        } catch (SQLException sqle) {
+            System.out.println("No se ha podido conectar con el servidor de base de datos. Comprueba que los datos son correctos y que el servidor se ha iniciado");
+            sqle.printStackTrace();
+        }
+
+        return false;
     }
 
     public boolean modify(String title, Task newTask) {

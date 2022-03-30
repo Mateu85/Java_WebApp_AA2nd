@@ -8,16 +8,11 @@ public class Task {
 
     public Task(String title, String description, String location) {
         this.title = title;
-        this.description = title;
+        this.description = description;
         this.location = location;
     }
 
-    public Task() {
 
-    }
-
-    public static void addTask(Task task) {
-    }
 
     public String getTitle() {
         return title;
