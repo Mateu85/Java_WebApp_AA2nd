@@ -17,35 +17,20 @@ public class BookingDao {
         this.connection = connection;
     }
 
-    public void bookHandyperson (User user, List<Task> tasks) throws SQLException {
-        String orderSql = "INSERT INTO orders (code, user_id, date) VALUES (?, ?, ?)";
-
-        connection.setAutoCommit(false);
-
-        PreparedStatement orderStatement = connection.prepareStatement(orderSql,
-                PreparedStatement.RETURN_GENERATED_KEYS);
-        orderStatement.setString(1, UUID.randomUUID().toString());
-        orderStatement.setInt(2, user.getId());
-        orderStatement.setDate(3, new Date(System.currentTimeMillis()));
-        orderStatement.executeUpdate();
-
-        // Obtener el orderId generado en la sentencia anterior (el último AUTO_INCREMENT generado)
-        ResultSet orderKeys = orderStatement.getGeneratedKeys();
-        orderKeys.next();
-        int orderId = orderKeys.getInt(1);
-        orderStatement.close();
-
-        for (Task task : tasks) {
-            String bookSql = "INSERT INTO order_book (order_id, book_id) VALUES (?, ?)";
-
-            PreparedStatement bookStatement = connection.prepareStatement(bookSql);
-            bookStatement.setInt(1, orderId);
-            bookStatement.setInt(2, task.getId());
-            bookStatement.executeUpdate();
+    public void add(Booking asignedBooking) throws SQLException {
+        String sql = "INSERT INTO bookings (code, paid, date, user_id, task_id) VALUES (?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, asignedBooking.getCode());
+            statement.setString(2, String.valueOf(asignedBooking.getPaid()));
+            statement.setString(3, String.valueOf(asignedBooking.getDate()));
+            statement.setString(3, String.valueOf(asignedBooking.getUser_id()));
+            statement.setString(3, String.valueOf(asignedBooking.getTask_id()));
+            statement.executeUpdate();
+        } catch (SQLException sqle) {
+            System.out.println("Could not connect to the database server. Check that the data is correct and that the server has been started");
+            sqle.printStackTrace();
         }
-
-        connection.commit();
-        connection.setAutoCommit(true);
     }
 
     public Booking getOrder() {

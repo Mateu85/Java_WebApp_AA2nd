@@ -9,7 +9,14 @@ public class Booking {
     private int id;
     private String code;
     private boolean paid;
+
+
     private LocalDate date;
+    private int user_id;
+
+
+    private int task_id;
+
 
     private User user;
     private List<Booking> task;
@@ -19,12 +26,14 @@ public class Booking {
         task = new ArrayList<>();
     }
 
-    public Booking(int id, String code, boolean paid, LocalDate date){
+
+    public Booking(int id, String code, boolean paid, LocalDate date, int user_id, int task_id) {
+        this.id = id;
         this.code = code;
         this.paid = paid;
         this.date = date;
-        task = new ArrayList<>();
-
+        this.user_id = user_id;
+        this.task_id = task_id;
     }
 
     public int getId() {
@@ -44,6 +53,42 @@ public class Booking {
     }
 
     public boolean isPaid() {
+        return paid;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
+
+    public void setTask_id(int task_id) {
+        this.task_id = task_id;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setTask(List<Booking> task) {
+        this.task = task;
+    }
+
+    public int getTask_id() {
+        return task_id;
+    }
+
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public List<Booking> getTask() {
+        return task;
+    }
+
+    public boolean getPaid() {
         return paid;
     }
 

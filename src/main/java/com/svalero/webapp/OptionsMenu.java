@@ -1,13 +1,19 @@
 package com.svalero.webapp;
 
+import com.svalero.webapp.dao.BookingDao;
 import com.svalero.webapp.dao.Database;
 import com.svalero.webapp.dao.TaskDao;
 import com.svalero.webapp.dao.UserDao;
+import com.svalero.webapp.domain.Booking;
 import com.svalero.webapp.domain.Task;
 import com.svalero.webapp.domain.User;
 
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 public class OptionsMenu {
@@ -18,6 +24,8 @@ public class OptionsMenu {
     private Task task;
     TaskDao taskDao;
     UserDao userdao;
+    BookingDao bookingDao;
+    private User currentUser;
 
 
     public OptionsMenu() {
@@ -28,11 +36,12 @@ public class OptionsMenu {
         database = new Database();
         connection = database.getConnection();
         taskDao = new TaskDao(connection);
+        bookingDao = new BookingDao(connection);
         //TODO CREAR CONSTRUCTOR USERDAO
-       // userdao = new UserDao(connection);
+        // userdao = new UserDao(connection);
     }
 
-    public void showMenu() {
+    public void showMenu() throws SQLException {
         connect();
         String choice = null;
 
@@ -67,10 +76,10 @@ public class OptionsMenu {
                     break;
                 case "6":
                     //TODO Register Logic
-                   // registerUser();
+                    // registerUser();
                     break;
                 case "7":
-                    bookHandyperson();
+                    bookHandyperson(bookingDao);
                     break;
             }
         } while (!choice.equals("8"));
@@ -141,23 +150,31 @@ public class OptionsMenu {
 
     }
 
-    private void bookHandyperson() {
-        //TODO registrar un usuario
+    private void bookHandyperson(BookingDao bookingDao) throws SQLException {
+
+        System.out.print("Tell us what needs to be done: ");
+        int id = Integer.parseInt(keyboard.nextLine());
+
+        System.out.print("Type the Type of AAsigment: ");
+        String code = keyboard.nextLine();
+
+        System.out.print("Is this a paid job?: ");
+        String ispaid = keyboard.nextLine();
+        boolean paid = false;
+        if (ispaid.equals("YES")){
+            paid = true;
+        }
+
+        System.out.print("User id : ");
+        int user_id = Integer.parseInt(keyboard.nextLine());
+
+        System.out.print("Task idf: ");
+        int task_id = Integer.parseInt(keyboard.nextLine());
+
+        Booking bookingService  = new Booking(id, code, paid, LocalDate.now(), user_id, task_id);
+
+        bookingDao.add(bookingService);
     }
-
-   /* private void registerUser(UserDao userDao) {
-        System.out.print("Name: ");
-        String name = keyboard.nextLine();
-        System.out.print("UserName: ");
-        String username = keyboard.nextLine();
-        System.out.print("Password: ");
-        String password = keyboard.nextLine();
-        System.out.print("Postcode: ");
-        String postcode = keyboard.nextLine();
-        User user = new User(name.trim(), username.trim(), password.trim(), postcode.trim());
-        userDao.add(user);
-
-    }*/
 
 }
 
