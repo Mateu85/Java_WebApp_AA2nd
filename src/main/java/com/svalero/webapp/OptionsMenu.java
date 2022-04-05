@@ -54,7 +54,8 @@ public class OptionsMenu {
             System.out.println("5. See Task List");
             System.out.println("6. Register a new User");
             System.out.println("7. Book a HandyPerson");
-            System.out.println("8. EXIT");
+            System.out.println("8. Print list of a User");
+            System.out.println("9. EXIT");
             System.out.print("Type your Option: ");
             choice = keyboard.nextLine();
 
@@ -81,8 +82,11 @@ public class OptionsMenu {
                 case "7":
                     bookHandyperson(bookingDao);
                     break;
+                case "8":
+                   showBookingList(bookingDao);
+                    break;
             }
-        } while (!choice.equals("8"));
+        } while (!choice.equals("9"));
     }
 
 
@@ -146,16 +150,18 @@ public class OptionsMenu {
         for (Task task : tasks) {
             System.out.println(task.getTitle());
         }
+    }
 
-
+    public void showBookingList(BookingDao bookingDao) {
+        ArrayList<Booking> bookings = bookingDao.queryBookingUser(1);
+        for (Booking booking : bookings) {
+            System.out.println(booking.toString());
+        }
     }
 
     private void bookHandyperson(BookingDao bookingDao) throws SQLException {
 
-        System.out.print("Tell us what needs to be done: ");
-        int id = Integer.parseInt(keyboard.nextLine());
-
-        System.out.print("Type the Type of AAsigment: ");
+        System.out.print("Type the Type of Asigment: ");
         String code = keyboard.nextLine();
 
         System.out.print("Is this a paid job?: ");
@@ -171,8 +177,7 @@ public class OptionsMenu {
         System.out.print("Task idf: ");
         int task_id = Integer.parseInt(keyboard.nextLine());
 
-        Booking bookingService  = new Booking(id, code, paid, LocalDate.now(), user_id, task_id);
-
+        Booking bookingService  = new Booking( code, paid, LocalDate.now(), user_id, task_id);
         bookingDao.add(bookingService);
     }
 

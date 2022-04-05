@@ -23,12 +23,11 @@ public class Booking {
 
 
     public Booking() {
-        task = new ArrayList<>();
+
     }
 
 
-    public Booking(int id, String code, boolean paid, LocalDate date, int user_id, int task_id) {
-        this.id = id;
+    public Booking( String code, boolean paid, LocalDate date, int user_id, int task_id) {
         this.code = code;
         this.paid = paid;
         this.date = date;
@@ -102,6 +101,18 @@ public class Booking {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    @Override
+    public String toString() {
+        return "Booking{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", paid=" + paid +
+                ", date=" + date +
+                ", user_id=" + user_id +
+                ", task_id=" + task_id +
+                '}';
     }
 }
 
