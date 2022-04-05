@@ -15,12 +15,12 @@ public class Database {
             try {
                 Class.forName(MYSQL_DRIVER);
                 connection = DriverManager.getConnection(MYSQL_URL, USERNAME, PASSWORD);
-                System.out.println("Conectado!");
+                System.out.println("✅ Connected!");
             } catch (ClassNotFoundException cnfe) {
-                System.out.println("No se ha podido cargar el driver de conexión. Verifique que los drivers están disponibles");
+                System.out.println("❌ The connection driver could not be loaded. Verify that the drivers are available");
                 cnfe.printStackTrace();
             } catch (SQLException sqle) {
-                System.out.println("No se ha podido conectar con el servidor de base de datos. Comprueba que los datos son correctos y que el servidor se ha iniciado");
+                System.out.println("❌ Could not connect to the database server. Check that the data is correct and that the server has been started");
                 sqle.printStackTrace();
             }
 

@@ -2,11 +2,12 @@ package com.svalero.webapp;
 
 import com.svalero.webapp.dao.Database;
 import com.svalero.webapp.dao.TaskDao;
+import com.svalero.webapp.dao.UserDao;
 import com.svalero.webapp.domain.Task;
+import com.svalero.webapp.domain.User;
 
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class OptionsMenu {
@@ -14,53 +15,69 @@ public class OptionsMenu {
     private Scanner keyboard;
     private Database database;
     private Connection connection;
+    private Task task;
+    TaskDao taskDao;
+    UserDao userdao;
 
-    public void Menu() {
+
+    public OptionsMenu() {
         keyboard = new Scanner(System.in);
     }
 
     public void connect() {
         database = new Database();
         connection = database.getConnection();
+        taskDao = new TaskDao(connection);
+        //TODO CREAR CONSTRUCTOR USERDAO
+       // userdao = new UserDao(connection);
     }
 
     public void showMenu() {
         connect();
-
         String choice = null;
 
         do {
             System.out.println("List of asigments in your area.");
-            System.out.println("1. Add Task.");
+            System.out.println("1. Register a new Task.");
             System.out.println("2. Search a Task.");
             System.out.println("3. Delete a Task.");
             System.out.println("4. Modify a Task.");
-            System.out.println("5. Look up the list of Tasks.");
-            System.out.println("6. EXIT");
+            System.out.println("5. See Task List");
+            System.out.println("6. Register a new User");
+            System.out.println("7. Book a HandyPerson");
+            System.out.println("8. EXIT");
             System.out.print("Type your Option: ");
             choice = keyboard.nextLine();
 
-            switch(choice) {
+            switch (choice) {
                 case "1":
-                    addTask();
+                    addTask(taskDao);
                     break;
                 case "2":
-                    findTask();
+                    findTask(taskDao);
                     break;
                 case "3":
-                    deleteTask();
+                    deleteTask(taskDao);
                     break;
                 case "4":
-                    modifyTask();
+                    modifyTask(taskDao);
                     break;
                 case "5":
-                    showTaskList();
+                    showTaskList(taskDao);
+                    break;
+                case "6":
+                    //TODO Register Logic
+                   // registerUser();
+                    break;
+                case "7":
+                    bookHandyperson();
                     break;
             }
-        } while (!choice.equals("6"));
+        } while (!choice.equals("8"));
     }
 
-    public void addTask() {
+
+    public void addTask(TaskDao taskDao) {
         System.out.print("Title: ");
         String title = keyboard.nextLine();
         System.out.print("Task Description: ");
@@ -68,20 +85,17 @@ public class OptionsMenu {
         System.out.print("Location: ");
         String taskLocation = keyboard.nextLine();
         Task task = new Task(title.trim(), Description.trim(), taskLocation.trim());
-
-        TaskDao taskDao = new TaskDao(connection);
         taskDao.add(task);
-        System.out.println("A new task has been added on the platform! Good Luck");
+
+
     }
 
-    public void findTask() {
-        System.out.print("Búsqueda por titulo: ");
+    public void findTask(TaskDao taskDao) {
+        System.out.print("Search by Title: ");
         String title = keyboard.nextLine();
-
-        TaskDao taskDao = new TaskDao(connection);
         Task task = taskDao.findByTitle(title);
         if (task == null) {
-            System.out.println("Ese libro no existe");
+            System.out.println("No task Task was found by that name");
             return;
         }
 
@@ -89,21 +103,19 @@ public class OptionsMenu {
         System.out.println(task.getDescription());
         System.out.println(task.getLocation());
     }
-    public void deleteTask() {
-        System.out.print("Titulo del libro a eliminar: ");
+
+    public void deleteTask(TaskDao taskDao) {
+        System.out.print("Type the Task you´d like to delete: ");
         String title = keyboard.nextLine();
-        TaskDao taskDao = new TaskDao(connection);
-        boolean deleted = TaskDao.remove(title);
+        boolean deleted = taskDao.remove(title);
         if (deleted)
-            System.out.println("El libro se ha borrado correctamente");
+            System.out.println("The task has been deleted successfully");
         else
             System.out.println("El libro no se ha podido borrar. No existe");
     }
 
-    public void modifyTask() {
+    public void modifyTask(TaskDao taskDao) {
         System.out.print("Name of the task you wanna modify: ");
-        String titulo = keyboard.nextLine();
-        System.out.print("Titulo del libro a modificar: ");
         String title = keyboard.nextLine();
         // TODO Buscar el libro antes de pedir los nuevos datos
         System.out.print("Nuevo Título: ");
@@ -113,8 +125,6 @@ public class OptionsMenu {
         System.out.print("Nueva Editorial: ");
         String newPublisher = keyboard.nextLine();
         Task newTask = new Task(newTitle.trim(), newAuthor.trim(), newPublisher.trim());
-
-        TaskDao taskDao = new TaskDao(connection);
         boolean modified = taskDao.modify(title, newTask);
         if (modified)
             System.out.println("El libro se ha modificado correctamente");
@@ -122,10 +132,34 @@ public class OptionsMenu {
             System.out.println("El libro no se ha podido modificar. No existe");
     }
 
-    public void showTaskList() {
-      //TODO CARGAR toda la lista de TASK
+    public void showTaskList(TaskDao taskDao) {
+        ArrayList<Task> tasks = taskDao.findAll();
+        for (Task task : tasks) {
+            System.out.println(task.getTitle());
         }
+
+
     }
+
+    private void bookHandyperson() {
+        //TODO registrar un usuario
+    }
+
+   /* private void registerUser(UserDao userDao) {
+        System.out.print("Name: ");
+        String name = keyboard.nextLine();
+        System.out.print("UserName: ");
+        String username = keyboard.nextLine();
+        System.out.print("Password: ");
+        String password = keyboard.nextLine();
+        System.out.print("Postcode: ");
+        String postcode = keyboard.nextLine();
+        User user = new User(name.trim(), username.trim(), password.trim(), postcode.trim());
+        userDao.add(user);
+
+    }*/
+
+}
 
 
 
