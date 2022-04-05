@@ -1,2 +1,4 @@
-package com.svalero.webapp.dao;public class UserDao {
+package com.svalero.webapp.dao;
+
+public class UserDao {
 }

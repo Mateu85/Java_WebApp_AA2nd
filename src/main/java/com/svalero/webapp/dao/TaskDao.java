@@ -17,7 +17,7 @@ public class TaskDao {
     }
 
 
-    public void add(Task task)  {
+    public void add(Task task)   {
         String sql = "INSERT INTO task (title, description, location) VALUES (?, ?, ?)";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -48,13 +48,13 @@ public class TaskDao {
         return false;
     }
 
-    public boolean modify(String title, Task book) {
+    public boolean modify(String title, Task task) {
         String sql = "UPDATE task SET title = ?, description = ?, location = ? WHERE title = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, book.getTitle());
-            statement.setString(2, book.getDescription());
-            statement.setString(3, book.getLocation());
+            statement.setString(1, task.getTitle());
+            statement.setString(2, task.getDescription());
+            statement.setString(3, task.getLocation());
             statement.setString(4, title);
             int rows = statement.executeUpdate();
             return rows == 1;
@@ -65,18 +65,18 @@ public class TaskDao {
 
         return false;
     }
-    public ArrayList<Task> findAll() {
+    public static ArrayList<Task> findAll() {
         String sql = "SELECT * FROM task ORDER BY title";
         ArrayList<Task> task = new ArrayList<>();
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Task book = new Task();
-                book.setTitle(resultSet.getString("title"));
-                book.setDescription(resultSet.getString("description"));
-                book.setLocation(resultSet.getString("location"));
-                task.add(book);
+                Task tasks = new Task();
+                tasks.setTitle(resultSet.getString("title"));
+                tasks.setDescription(resultSet.getString("description"));
+                tasks.setLocation(resultSet.getString("location"));
+                task.add(tasks);
             }
         } catch (SQLException sqle) {
             System.out.println("\n" +
