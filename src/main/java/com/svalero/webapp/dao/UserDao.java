@@ -7,7 +7,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Optional;
 
 public class UserDao {
 
@@ -29,8 +28,8 @@ public class UserDao {
 
     }
 
-    public Optional<User> getUser(String username, String password) throws SQLException {
-        String sql = "SELECT * FROM users WHERE username = ? AND password = SHA1(?)";
+    public User getUser(String username, String password) throws SQLException {
+        String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
         User user = null;
 
         PreparedStatement statement = connection.prepareStatement(sql);
@@ -43,9 +42,10 @@ public class UserDao {
             user.setName(resultSet.getString("name"));
             user.setUsername(resultSet.getString("username"));
             user.setPassword(resultSet.getString("password"));
+            return (user);
         }
 
-        return Optional.ofNullable(user);
+        return null;
     }
 
     // TODO Terminar de hacer el resto de métodos de este DAO: modifyUser, deleteUser, getUsers, . . . .

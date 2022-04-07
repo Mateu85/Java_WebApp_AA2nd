@@ -8,7 +8,7 @@ import com.svalero.webapp.domain.Booking;
 import com.svalero.webapp.domain.Task;
 import com.svalero.webapp.domain.User;
 import com.svalero.webapp.exception.TaskNotFoundException;
-import com.svalero.webapp.exception.UserNotFoundException;
+
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -22,7 +22,7 @@ public class OptionsMenu {
     private Connection connection;
     private Task task;
     TaskDao taskDao;
-    UserDao userdao;
+    UserDao userDao;
     BookingDao bookingDao;
     private Optional<User> currentUser;
 
@@ -37,13 +37,14 @@ public class OptionsMenu {
         connection = database.getConnection();
         taskDao = new TaskDao(connection);
         bookingDao = new BookingDao(connection);
+        userDao = new UserDao(connection);
         //TODO CREAR CONSTRUCTOR USERDAO
         // userdao = new UserDao(connection);
     }
 
     public void showMenu() throws SQLException, TaskNotFoundException {
         connect();
-       // login();
+        login(userDao);
 
         String choice = null;
 
@@ -90,6 +91,20 @@ public class OptionsMenu {
         } while (!choice.equals("9"));
     }
 
+    public void login(UserDao userDao) throws SQLException {
+        System.out.print("User Name: ");
+        String name = keyboard.nextLine();
+        System.out.print("Password: ");
+        String password = keyboard.nextLine();
+
+        if(userDao.getUser(name.trim(), password.trim()) != null ){
+            System.out.println("you are logedIn");
+        }else{
+            System.out.println("Log In Incorrect");
+        }
+
+
+    }
 
     public void addTask(TaskDao taskDao) {
         System.out.print("Title: ");
