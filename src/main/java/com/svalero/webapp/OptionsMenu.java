@@ -7,14 +7,13 @@ import com.svalero.webapp.dao.UserDao;
 import com.svalero.webapp.domain.Booking;
 import com.svalero.webapp.domain.Task;
 import com.svalero.webapp.domain.User;
+import com.svalero.webapp.exception.TaskNotFoundException;
+import com.svalero.webapp.exception.UserNotFoundException;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class OptionsMenu {
 
@@ -25,11 +24,12 @@ public class OptionsMenu {
     TaskDao taskDao;
     UserDao userdao;
     BookingDao bookingDao;
-    private User currentUser;
+    private Optional<User> currentUser;
 
 
     public OptionsMenu() {
         keyboard = new Scanner(System.in);
+
     }
 
     public void connect() {
@@ -41,8 +41,10 @@ public class OptionsMenu {
         // userdao = new UserDao(connection);
     }
 
-    public void showMenu() throws SQLException {
+    public void showMenu() throws SQLException, TaskNotFoundException {
         connect();
+       // login();
+
         String choice = null;
 
         do {
@@ -76,8 +78,7 @@ public class OptionsMenu {
                     showTaskList(taskDao);
                     break;
                 case "6":
-                    //TODO Register Logic
-                    // registerUser();
+                    addUser();
                     break;
                 case "7":
                     bookHandyperson(bookingDao);
@@ -152,10 +153,20 @@ public class OptionsMenu {
         }
     }
 
-    public void showBookingList(BookingDao bookingDao) {
-        ArrayList<Booking> bookings = bookingDao.queryBookingUser(1);
-        for (Booking booking : bookings) {
-            System.out.println(booking.toString());
+    private void addUser() {
+        UserDao userDao = new UserDao(connection);
+
+        System.out.print("Type your User Name: ");
+        String username = keyboard.nextLine();
+        System.out.print("Choose a password:  ");
+        String password = keyboard.nextLine();
+        System.out.print("postCode (XXX XXX):  ");
+        String postCode = keyboard.nextLine();
+        User user = new User(username.trim(),username.trim(),password.trim(),postCode.trim());
+        try {
+            userDao.add(user);
+        } catch (SQLException sqle) {
+
         }
     }
 
@@ -179,6 +190,27 @@ public class OptionsMenu {
 
         Booking bookingService  = new Booking( code, paid, LocalDate.now(), user_id, task_id);
         bookingDao.add(bookingService);
+    }
+
+    public void showBookingList(BookingDao bookingDao) throws TaskNotFoundException {
+        System.out.print("User id : ");
+        int user_id = Integer.parseInt(keyboard.nextLine());
+
+        ArrayList<Booking> bookings = bookingDao.queryBookingUser(user_id);
+        for (Booking booking : bookings) {
+            int task_id  = booking.getTask_id();
+
+           try {
+               Task userTask = taskDao.getTaskById(task_id);
+               System.out.print(userTask.getTitle());
+            //TODO CREATE EXEPTION WHEN A BOOKING DOES NOT EXIST
+           }
+            catch (TaskNotFoundException e){
+                System.out.println("Task not found");
+            }
+
+        }
+
     }
 
 }

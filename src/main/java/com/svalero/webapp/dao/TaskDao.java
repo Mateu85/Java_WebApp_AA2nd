@@ -1,6 +1,7 @@
 package com.svalero.webapp.dao;
 
 import com.svalero.webapp.domain.Task;
+import com.svalero.webapp.exception.TaskNotFoundException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -106,6 +107,30 @@ public class TaskDao {
             sqle.printStackTrace();
         }
 
+        return task;
+    }
+
+    public Task getTaskById(int id) throws TaskNotFoundException {
+        String sql = "SELECT * FROM task WHERE id = ?";
+        Task task = null;
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                task = new Task();
+                task.setTitle(resultSet.getString("title"));
+                task.setDescription(resultSet.getString("description"));
+                task.setLocation(resultSet.getString("location"));
+            }
+        } catch (SQLException sqle) {
+            System.out.println("No se ha podido conectar con el servidor de base de datos. Comprueba que los datos son correctos y que el servidor se ha iniciado");
+            sqle.printStackTrace();
+        }
+        if (task == null){
+            throw new TaskNotFoundException("msm");
+        }
         return task;
     }
 

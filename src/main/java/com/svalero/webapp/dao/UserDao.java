@@ -26,6 +26,7 @@ public class UserDao {
         statement.setString(2, user.getUsername());
         statement.setString(3, user.getPassword());
         statement.executeUpdate();
+
     }
 
     public Optional<User> getUser(String username, String password) throws SQLException {
