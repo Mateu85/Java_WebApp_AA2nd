@@ -1,5 +1,6 @@
 package com.svalero.webapp.dao;
 
+import com.svalero.webapp.domain.Booking;
 import com.svalero.webapp.domain.Task;
 import com.svalero.webapp.exception.TaskNotFoundException;
 
@@ -133,6 +134,38 @@ public class TaskDao {
         }
         return task;
     }
+
+    public ArrayList<Task> queryUserTaskList (int user_id) throws TaskNotFoundException {
+        String sql = "SELECT * FROM  task INNER JOIN bookings ON bookings.task_id = task_id WHERE bookings.user_id = ? ";
+        // TODO MODIFY QUERY " WHERE" DOES NOT WORK
+        ArrayList<Task> tasks = new ArrayList<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, user_id);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Task task = new Task();
+                task.setTitle(resultSet.getString("title"));
+                task.setDescription(resultSet.getString("description"));
+                task.setLocation(resultSet.getString("location"));
+
+                tasks.add(task);
+            }
+        } catch (SQLException sqle) {
+            System.out.println("\n" +
+                    "Could not connect to the database server. Check that the data is correct and that the server has been started");
+            sqle.printStackTrace();
+        }
+
+        if(tasks.isEmpty()){
+            throw new TaskNotFoundException("Task Not Found");
+        }
+
+        return tasks;
+
+    }
+
+
 
 }
 

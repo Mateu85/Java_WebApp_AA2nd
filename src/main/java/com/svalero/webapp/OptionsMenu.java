@@ -85,7 +85,7 @@ public class OptionsMenu {
                     bookHandyperson(bookingDao);
                     break;
                 case "8":
-                   showBookingList(bookingDao);
+                   showBookingList(taskDao);
                     break;
             }
         } while (!choice.equals("9"));
@@ -140,7 +140,7 @@ public class OptionsMenu {
         if (deleted)
             System.out.println("The task has been deleted successfully");
         else
-            System.out.println("El libro no se ha podido borrar. No existe");
+            System.out.println("The task could not be deleted successfully. Try again!");
     }
 
     public void modifyTask(TaskDao taskDao) {
@@ -207,24 +207,20 @@ public class OptionsMenu {
         bookingDao.add(bookingService);
     }
 
-    public void showBookingList(BookingDao bookingDao) throws TaskNotFoundException {
+    public void showBookingList(TaskDao taskdao) throws TaskNotFoundException {
         System.out.print("User id : ");
         int user_id = Integer.parseInt(keyboard.nextLine());
 
-        ArrayList<Booking> bookings = bookingDao.queryBookingUser(user_id);
-        for (Booking booking : bookings) {
-            int task_id  = booking.getTask_id();
+       try {
+           ArrayList<Task> tasks = taskDao.queryUserTaskList(user_id);
+           for (Task task : tasks) {
 
-           try {
-               Task userTask = taskDao.getTaskById(task_id);
-               System.out.print(userTask.getTitle());
-            //TODO CREATE EXEPTION WHEN A BOOKING DOES NOT EXIST
+               System.out.println(task.getTitle());
+
            }
-            catch (TaskNotFoundException e){
-                System.out.println("Task not found");
-            }
-
-        }
+       }catch (TaskNotFoundException e){
+           System.out.print("NOT FOUND");
+       }
 
     }
 

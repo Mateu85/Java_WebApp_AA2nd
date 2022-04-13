@@ -45,6 +45,7 @@ public class BookingDao {
     public ArrayList<Booking> queryBookingUser (int user_id){
         String sql = "SELECT * FROM  bookings WHERE user_id = ? ";
 
+
         ArrayList<Booking> bookings = new ArrayList<>();
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
