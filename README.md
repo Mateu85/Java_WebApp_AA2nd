@@ -32,7 +32,7 @@ A --> C((Develop))
 ```
 
 
-
+[![Image from Gyazo](https://i.gyazo.com/75726a73c11fbfcd420a56c8efb25a6c.gif)](https://gyazo.com/75726a73c11fbfcd420a56c8efb25a6c)
 
 
 
